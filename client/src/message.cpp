@@ -4,7 +4,7 @@
 
 using namespace asio;
 using namespace asio::ip;
-using namespace divided_client;
+using namespace client_message;
 
   // post_message();
   // post_message(std::string &dir);
@@ -13,10 +13,10 @@ using namespace divided_client;
   // std::size_t receive(tcp::socket &s) throw();
   // std::iostream & get_stream();
 
-post_message::post_message(std::string &dir):
+post_message::post_message(std::string dir):
   data_stream_(&buffer_)
 {
-  header_ = "POST " + dir + "HTTP/1.0\r\n"
+  header_ = "POST " + dir + " HTTP/1.0\r\n"
     "Content-Type: application/octet-stream\r\n"
     "Content-Length: ";
 
@@ -40,11 +40,12 @@ post_message::receive(tcp::socket &s) throw()
   error_code ec;
   size_t total_bytes = 0;
 
+  buffer_.prepare(1024*1024*8);
   read(s, buffer_, ec);
 
   // get rid of HTTP header
   size_t bytes = 0;
-  while (bytes > 1)
+  while (bytes != 1)
     {
       std::getline(data_stream_, header);
       bytes = header.length();

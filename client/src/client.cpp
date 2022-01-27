@@ -2,55 +2,34 @@
 #include <iostream>
 #include <string>
 #include <system_error>
-#include "asio/error_code.hpp"
+#include "message.hpp"
 #include "packet.pb.h"
 
 using namespace asio;
 using namespace asio::ip;
+using namespace client_message;
 
 
 void
 send_tensor(tcp::socket& s, study::tensor& t)
 {
-  std::string msg = "POST /numpy/inference HTTP/1.0\r\n"
-    "Content-Type: application/octet-stream\r\n"
-    "Content-Length: ";
+  post_message msg("/numpy/inference");
+  auto& stream = msg.get_stream();
 
-  std::string data;
-  t.SerializePartialToString(&data);
+  t.SerializeToOstream(&stream);
 
-  msg += std::to_string(data.length());
-  std::cout << msg << std::endl;
-  msg += "\r\n\r\n";
-
-  write(s, buffer(msg));
-  write(s, buffer(data));
+  msg.send(s);
 }
 
 void
 get_tensor(tcp::socket& s, study::tensor &t)
 {
-  error_code ec;
-  std::string header;
-  streambuf buf;
-  std::istream input(&buf);
-  buf.prepare((1024 * 1024) << 2);
+  post_message msg("");
+  auto& stream = msg.get_stream();
 
-  t.clear_channel();
-  t.clear_data();
-  t.clear_height();
-  t.clear_width();
+  msg.receive(s);
 
-  read(s, buf, ec);
-  size_t bytes = 0;
-  while (bytes != 1)
-    {
-      std::getline(input, header);
-      std::cout << header << std::endl;
-      bytes = header.length();
-    }
-
-  t.ParseFromIstream(&input);
+  t.ParseFromIstream(&stream);
 }
 
 std::ostream &

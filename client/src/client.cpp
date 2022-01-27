@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <system_error>
+#include "packet.pb.h"
 
 using namespace asio;
 using namespace asio::ip;

@@ -2,6 +2,7 @@ from flask import Flask, request
 import pickle
 import numpy as np
 import json
+from packet_pb2 import tensor
 
 
 app = Flask(__name__)
@@ -15,7 +16,14 @@ def home():
 @app.route("/numpy/inference", methods=["POST"])
 def get_msg():
     msg = request.data
-    msg = pickle.loads(msg, encoding="bytes")
+    t = tensor()
+    t.ParseFromString(request.data)
+    # msg = pickle.loads(msg, encoding="bytes")
+    print(t.width)
+    print(t.height)
+    print(t.channel)
+    print(t.data)
+
     # result = inference(msg["content"])
     return pickle.dumps({
         "header": "Result",

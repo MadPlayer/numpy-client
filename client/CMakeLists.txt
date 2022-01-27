@@ -1,4 +1,6 @@
-set(client_sources client.cpp)
+
+
+set(client_sources client.cpp message.cpp)
 list(TRANSFORM client_sources PREPEND "src/")
 
 find_package(Protobuf REQUIRED)
@@ -21,6 +23,7 @@ target_link_libraries(client
 target_include_directories(client PUBLIC
   ${ASIO_HEADER}
   ${CMAKE_CURRENT_BINARY_DIR}/../include/
+  include
   ${PROTO_HEADER}
   ${Protobuf_INCLUDE_DIRS}
   )

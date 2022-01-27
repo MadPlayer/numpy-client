@@ -14,7 +14,7 @@ using namespace divided_client;
   // std::iostream & get_stream();
 
 post_message::post_message(std::string &dir):
-  data_stream_(buffer_)
+  data_stream_(&buffer_)
 {
   header_ = "POST " + dir + "HTTP/1.0\r\n"
     "Content-Type: application/octet-stream\r\n"
@@ -30,7 +30,7 @@ void post_message::send(tcp::socket &s) throw()
 
   write(s, buffer(header_));
   write(s, buffer_);
-  invalid_ = true;
+  invalied_ = true;
 }
 
 std::size_t
@@ -38,6 +38,7 @@ post_message::receive(tcp::socket &s) throw()
 {
   std::string header ;
   error_code ec;
+  size_t total_bytes = 0;
 
   read(s, buffer_, ec);
 
@@ -47,8 +48,10 @@ post_message::receive(tcp::socket &s) throw()
     {
       std::getline(data_stream_, header);
       bytes = header.length();
+      total_bytes += bytes;
     }
-  invalid_ = false;
+  invalied_ = false;
+  return total_bytes;
 }
 
 std::iostream &

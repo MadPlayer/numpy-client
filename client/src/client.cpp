@@ -27,34 +27,47 @@ send_tensor(tcp::socket& s, study::tensor& t)
   write(s, buffer(data));
 }
 
-study::tensor
-get_tensor(tcp::socket& s)
+void
+get_tensor(tcp::socket& s, study::tensor &t)
 {
-  study::tensor t;
-  streambuf sbuf;
-  std::istream input(&sbuf);
+  error_code ec;
+  std::string header;
+  streambuf buf;
+  std::istream input(&buf);
+  buf.prepare((1024 * 1024) << 2);
+
+  t.clear_channel();
+  t.clear_data();
+  t.clear_height();
+  t.clear_width();
+
+  read(s, buf, ec);
   size_t bytes = 0;
-
-  try {
-    bytes = read(s, sbuf);
-  } catch (std::system_error &ec) {
-    std::cerr << "bytes: " << bytes << std::endl;
-  }
-  sbuf.commit(bytes);
-  std::string line;
-  
-  int length = 2;
-  while (length != 1)
+  while (bytes != 1)
     {
-      std::getline(input, line);
-      std::cout << line;
-      length = line.length();
+      std::getline(input, header);
+      std::cout << header << std::endl;
+      bytes = header.length();
     }
-  t.ParseFromIstream(&input);
 
-  return t;
+  t.ParseFromIstream(&input);
 }
 
+std::ostream &
+operator <<(std::ostream& o, const study::tensor &t)
+{
+  o << "width: " << t.width() << std::endl
+    << "height: " << t.height() << std::endl
+    << "channel: " << t.channel() << std::endl;
+  o << "tensor : \n [";
+  for (auto &i: t.data())
+    {
+      o << i << ", ";
+    }
+  o << "]\n";
+
+  return o;
+}
 
 int main(int argc, char *argv[])
 {
@@ -77,30 +90,9 @@ int main(int argc, char *argv[])
 
       send_tensor(socket, t);
 
-      streambuf b;
-      std::string tmp;
-      std::istream input(&b);
-      b.prepare(10000);
-      error_code e;
-      read(socket, b, e);
-      while (!input.eof())
-        {
-          std::getline(input, tmp);
-          std::cout << tmp << std::endl;
-          if (tmp.length() == 1) // now start data
-            {
-              break;
-            }
-        }
-      t.ParseFromIstream(&input);
-      std::cout << t.width() << std::endl;
-      std::cout << t.height() << std::endl;
-      std::cout << t.channel() << std::endl;
-      for (const auto i: t.data())
-        {
-          std::cout << i << std::endl;
-        }
+      get_tensor(socket, t);
 
+      std::cout << t;
     }
   catch (std::system_error &ec)
     {

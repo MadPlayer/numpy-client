@@ -21,8 +21,9 @@ def get_msg():
     print(t.width)
     print(t.height)
     print(t.channel)
-    print(t.data)
-    t.data[:] = [1, 2 , 3, 4, 5]
+    b = np.array(t.data)
+    print(b)
+    t.data[:] = [i*2 for i in range(10)]
 
     return t.SerializeToString()
 

@@ -7,5 +7,4 @@ protobuf_generate_cpp(PROTO_SRC PROTO_HEADER packet.proto)
 
 protobuf_generate_python(PROTO_PY packet.proto)
 
-add_custom_target(PROTO_PACKET ALL DEPENDS
-  ${PROTO_SRC} ${PROTO_HEADER} ${PROTO_PY})
+add_library(PACKET_LIB ${PROTO_SRC} ${PROTO_HEADER})

@@ -1,20 +1,26 @@
 set(client_sources client.cpp)
 list(TRANSFORM client_sources PREPEND "src/")
 
+find_package(Protobuf REQUIRED)
+
 add_executable(client
-  "${client_sources}"
-  ${PROTO_PACKET}
+  ${client_sources}
+  )
+
+link_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+
+target_sources(client PUBLIC
+  ${client_sources}
   )
 
 target_link_libraries(client
-  -lpthread)
+  ${Protobuf_LIBRARY}
+  PACKET_LIB
+  pthread)
 
 target_include_directories(client PUBLIC
   ${ASIO_HEADER}
   ${CMAKE_CURRENT_BINARY_DIR}/../include/
   ${PROTO_HEADER}
-  )
-
-message(
-  ${CMAKE_CURRENT_BINARY_DIR}/../include/
+  ${Protobuf_INCLUDE_DIRS}
   )

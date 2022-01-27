@@ -23,26 +23,23 @@ int main(int argc, char *argv[])
         "POST / HTTP/1.0\r\n"
         "Content-Type: text/plain\r\n"
         "Content-Length: 5\r\n"
-        "\r\n"
-        "hello";
+        "\r\n";
+      study::tensor t;
+      t.set_width(1);
+      t.set_heigit(2);
+      t.set_channel(33);
+      t.mutable_data()->Resize(10, 1);
+
+      t.SerializePartialToString(&msg);
+
       write(socket, buffer(msg));
 
-      streambuf buf;
-      std::istream input(&buf);
-
-      read_until(socket, buf, '\n');
-
-      input >> msg;
-      std::cout << msg << std::endl;
-
-      socket.close();
     }
   catch (std::system_error &ec)
     {
       std::cerr << "Error(" << ec.code() << "): " << ec.what() << std::endl;
       return ec.code().value();
     }
-
 
   return 0;
 }

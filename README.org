@@ -3,7 +3,9 @@
 ** Requirements
    - ASIO 1.20.0
    - cmake 3.10
+   - GNU Make 4.2.1
    - C++ std 17
+   - libprotoc 3.6.1
 
 ** Build
    #+BEGIN_SRC bash

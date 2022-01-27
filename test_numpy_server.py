@@ -18,17 +18,13 @@ def get_msg():
     msg = request.data
     t = tensor()
     t.ParseFromString(request.data)
-    # msg = pickle.loads(msg, encoding="bytes")
     print(t.width)
     print(t.height)
     print(t.channel)
     print(t.data)
+    t.data[:] = [1, 2 , 3, 4, 5]
 
-    # result = inference(msg["content"])
-    return pickle.dumps({
-        "header": "Result",
-        "content": msg["content"] * 10 # result
-    })
+    return t.SerializeToString()
 
 
 @app.route("/numpy/example")

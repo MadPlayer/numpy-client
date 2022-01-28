@@ -7,14 +7,26 @@
    - C++ std 17
    - libprotoc 3.6.1
 
+*** for server (python file on project root)
+    - Python 3
+    - Flask
+    - Numpy
+
 ** Build
-   #+BEGIN_SRC bash
-     cd client
-     mkdir build
-     cd build
-     cmake -DASIO_HEADER=$(ASIO/HEADER/LOCATION) ..
-     make
-   #+END_SRC
+   - client
+     #+BEGIN_SRC bash
+       mkdir build && cd build
+       cmake -DASIO_HEADER=$(ASIO/HEADER/LOCATION) ..
+       make
+     #+END_SRC
+
+   - server (server needs protobuf file)
+     after building client
+     #+BEGIN_SRC bash
+       # in build folder
+       make packet_py
+       cp ./include/packet_pb2.py /path/to/test_numpy_server
+     #+END_SRC
 
 ** LICENSE
    정리중

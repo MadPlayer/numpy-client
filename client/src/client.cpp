@@ -7,13 +7,12 @@
 
 using namespace asio;
 using namespace asio::ip;
-using namespace client_message;
 
 
 void
-send_tensor(tcp::socket& s, study::tensor& t)
+send_tensor(tcp::socket& s, body::tensor& t)
 {
-  post_message msg("/numpy/inference");
+  post::message msg("/numpy/inference");
   auto& stream = msg.get_stream();
 
   t.SerializeToOstream(&stream);
@@ -22,9 +21,9 @@ send_tensor(tcp::socket& s, study::tensor& t)
 }
 
 void
-get_tensor(tcp::socket& s, study::tensor &t)
+get_tensor(tcp::socket& s, body::tensor &t)
 {
-  post_message msg("");
+  post::message msg("");
   auto& stream = msg.get_stream();
 
   msg.receive(s);
@@ -33,7 +32,7 @@ get_tensor(tcp::socket& s, study::tensor &t)
 }
 
 std::ostream &
-operator <<(std::ostream& o, const study::tensor &t)
+operator <<(std::ostream& o, const body::tensor &t)
 {
   o << "width: " << t.width() << std::endl
     << "height: " << t.height() << std::endl
@@ -61,7 +60,7 @@ int main(int argc, char *argv[])
 
       socket.connect(ep);
 
-      study::tensor t;
+      body::tensor t;
       t.set_width(1);
       t.set_height(2);
       t.set_channel(33);

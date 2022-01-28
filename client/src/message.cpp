@@ -4,7 +4,7 @@
 
 using namespace asio;
 using namespace asio::ip;
-using namespace client_message;
+using namespace post;
 
   // post_message();
   // post_message(std::string &dir);
@@ -13,7 +13,7 @@ using namespace client_message;
   // std::size_t receive(tcp::socket &s) throw();
   // std::iostream & get_stream();
 
-post_message::post_message(std::string dir):
+message::message(std::string dir):
   data_stream_(&buffer_)
 {
   header_ = "POST " + dir + " HTTP/1.0\r\n"
@@ -24,7 +24,7 @@ post_message::post_message(std::string dir):
   invalied_ = true;
 }
 
-void post_message::send(tcp::socket &s) throw()
+void message::send(tcp::socket &s) throw()
 {
   header_ += std::to_string(buffer_.size()) + "\r\n\r\n";
 
@@ -34,7 +34,7 @@ void post_message::send(tcp::socket &s) throw()
 }
 
 std::size_t
-post_message::receive(tcp::socket &s) throw()
+message::receive(tcp::socket &s) throw()
 {
   std::string header ;
   error_code ec;
@@ -56,7 +56,7 @@ post_message::receive(tcp::socket &s) throw()
 }
 
 std::iostream &
-post_message::get_stream()
+message::get_stream()
 {
   return data_stream_;
 }

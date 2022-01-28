@@ -3,33 +3,12 @@
 #include <string>
 #include <system_error>
 #include "message.hpp"
+#include "tensor.hpp"
 #include "packet.pb.h"
 
 using namespace asio;
 using namespace asio::ip;
 
-
-void
-send_tensor(tcp::socket& s, body::tensor& t)
-{
-  post::message msg("/numpy/inference");
-  auto& stream = msg.get_stream();
-
-  t.SerializeToOstream(&stream);
-
-  msg.send(s);
-}
-
-void
-get_tensor(tcp::socket& s, body::tensor &t)
-{
-  post::message msg("");
-  auto& stream = msg.get_stream();
-
-  msg.receive(s);
-
-  t.ParseFromIstream(&stream);
-}
 
 std::ostream &
 operator <<(std::ostream& o, const body::tensor &t)
@@ -66,9 +45,9 @@ int main(int argc, char *argv[])
       t.set_channel(33);
       t.mutable_data()->Resize(10, 1);
 
-      send_tensor(socket, t);
+      tensor::send_tensor(socket, t);
 
-      get_tensor(socket, t);
+      tensor::get_tensor(socket, t);
 
       std::cout << t;
     }

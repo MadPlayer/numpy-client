@@ -1,6 +1,10 @@
 
 
-set(client_sources client.cpp message.cpp)
+set(client_sources
+  client.cpp
+  message.cpp
+  tensor.cpp
+  )
 list(TRANSFORM client_sources PREPEND "src/")
 
 find_package(Protobuf REQUIRED)

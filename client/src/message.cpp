@@ -6,12 +6,6 @@ using namespace asio;
 using namespace asio::ip;
 using namespace post;
 
-  // post_message();
-  // post_message(std::string &dir);
-  // std::size_t append(std::string &&data);
-  // void send(tcp::socket &s) throw();
-  // std::size_t receive(tcp::socket &s) throw();
-  // std::iostream & get_stream();
 
 message::message(std::string dir):
   data_stream_(&buffer_)

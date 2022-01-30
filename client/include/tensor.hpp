@@ -13,10 +13,9 @@ namespace tensor
   void send_tensor(tcp::socket& s, body::tensor& t);
   void get_tensor(tcp::socket& s, body::tensor & t);
 
-  std::istream &
+  void
   operator >> (post::message& msg, body::tensor & t);
 
-  std::ostream &
+  void
   operator << (post::message& msg, body::tensor& t);
-
 }    

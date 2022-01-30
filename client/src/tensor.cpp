@@ -20,22 +20,18 @@ namespace tensor
     msg >> t;
   }
 
-  std::istream &
+  void
   operator >> (post::message& msg, body::tensor & t)
   {
     auto& stream = msg.get_stream();
     t.ParseFromIstream(&stream);
-
-    return stream;
   }
 
-  std::ostream &
+  void
   operator << (post::message& msg, body::tensor& t)
   {
     auto& stream = msg.get_stream();
     t.SerializeToOstream(&stream);
-
-    return stream;
   }
 }    
 

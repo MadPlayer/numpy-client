@@ -35,13 +35,24 @@ session::session(session&& s)
 
 void session::connect(tcp::endpoint &ep)
 {
-  socket_ptr_->connect(ep);
+  if (!socket_ptr_->is_open())
+    socket_ptr_->connect(ep);
 }
 
-void session::assign_task(task&& t)
+void session::assign_task(task t)
 {
+  task_ = t;
 }
 
 void session::run()
 {
+  task_(*socket_ptr_);
+}
+
+void session::reset()
+{
+  context_ptr_->stop();
+  context_ptr_->reset();
+  socket_ptr_->shutdown(tcp::socket::shutdown_both);
+  socket_ptr_ = std::make_unique<tcp::socket>(*context_ptr_, tcp::v4());
 }

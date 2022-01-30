@@ -20,8 +20,7 @@ public:
   session(std::string address_v4, unsigned int port);
   session(session&& s);
   void connect(asio::ip::tcp::endpoint &ep);
-  void assign_task(task& t);
-  void assign_task(task&& t);
+  void assign_task(task t);
   void run();
   void reset();
 };

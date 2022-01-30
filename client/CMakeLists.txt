@@ -2,6 +2,7 @@ set(client_sources
   client.cpp
   message.cpp
   tensor.cpp
+  session.cpp
   )
 list(TRANSFORM client_sources PREPEND "src/")
 

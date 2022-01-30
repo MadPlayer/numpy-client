@@ -4,6 +4,7 @@
 #include <system_error>
 #include "message.hpp"
 #include "tensor.hpp"
+#include "session.hpp"
 #include "packet.pb.h"
 
 using namespace asio;
@@ -35,9 +36,7 @@ int main(int argc, char *argv[])
 
   try
     {
-      tcp::socket socket(context, tcp::v4());
-
-      socket.connect(ep);
+      session s(ep);  // create session and connect to endpoint
 
       body::tensor t;
       t.set_width(1);
@@ -45,10 +44,13 @@ int main(int argc, char *argv[])
       t.set_channel(33);
       t.mutable_data()->Resize(10, 1);
 
-      tensor::send_tensor(socket, t);
+      s.assign_task([&t](tcp::socket &s){
+        tensor::send_tensor(s, t);
+        tensor::get_tensor(s, t);
+      });
 
-      tensor::get_tensor(socket, t);
-
+      s.run();
+        
       std::cout << t;
     }
   catch (std::system_error &ec)

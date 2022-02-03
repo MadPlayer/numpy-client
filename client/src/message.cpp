@@ -14,6 +14,7 @@ message::message(std::string dir):
     "Content-Type: application/octet-stream\r\n"
     "Content-Length: ";
 
+  // XXX: use this to make message more secure
   // message has no data yet
   invalied_ = true;
 }
@@ -30,11 +31,10 @@ void message::send(tcp::socket &s) throw()
 std::size_t
 message::receive(tcp::socket &s) throw()
 {
-  std::string header ;
+  std::string header;
   error_code ec;
   size_t total_bytes = 0;
 
-  buffer_.prepare(1024*1024*8);
   read(s, buffer_, ec);
 
   // get rid of HTTP header

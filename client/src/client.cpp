@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <system_error>
-#include "message.hpp"
+#include <chrono>
 #include "tensor.hpp"
 #include "session.hpp"
 #include "packet.pb.h"
@@ -34,29 +34,33 @@ int main(int argc, char *argv[])
   tcp::endpoint ep(make_address(address), 5000);
 
 
-  try
+  while (true)
     {
-      session s(ep);  // create session and connect to endpoint
+      try
+        {
+          session s(ep);  // create session and connect to endpoint
 
-      body::tensor t;
-      t.set_width(1);
-      t.set_height(2);
-      t.set_channel(33);
-      t.mutable_data()->Resize(10, 1);
+          body::tensor t;
+          t.set_width(1);
+          t.set_height(2);
+          t.set_channel(33);
+          t.mutable_data()->Resize(10, 1);
 
-      s.assign_task([&t](tcp::socket &s){
-        tensor::send_tensor(s, t);
-        tensor::get_tensor(s, t);
-      });
+          s.assign_task([&t](tcp::socket &s){
+            tensor::send_tensor(s, t);
+            tensor::get_tensor(s, t);
+          });
 
-      s.run();
+          s.run();
         
-      std::cout << t;
-    }
-  catch (std::system_error &ec)
-    {
-      std::cerr << "Error(" << ec.code() << "): " << ec.what() << std::endl;
-      return ec.code().value();
+          std::cout << t;
+          std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+      catch (std::system_error &ec)
+        {
+          std::cerr << "Error(" << ec.code() << "): " << ec.what() << std::endl;
+          return ec.code().value();
+        }
     }
 
   return 0;

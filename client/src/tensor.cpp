@@ -4,6 +4,7 @@ namespace tensor
 {
   void send_tensor(tcp::socket& s, body::tensor& t)
   {
+    // XXX: Hard Coding Server Directory!!!
     post::message msg("/numpy/inference");
 
     msg << t;

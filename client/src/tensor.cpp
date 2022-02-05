@@ -34,5 +34,11 @@ namespace tensor
     auto& stream = msg.get_stream();
     t.SerializeToOstream(&stream);
   }
-}    
 
+  blob::blob<elem_type> get_blob(body::tensor& t)
+  {
+    std::size_t length = t.channel() * t.height() * t.width();
+
+    return {t.mutable_data()->mutable_data(), length, blob::element_number{}};
+  }
+}

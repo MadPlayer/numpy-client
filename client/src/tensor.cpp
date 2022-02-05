@@ -39,6 +39,8 @@ namespace tensor
   {
     std::size_t length = t.channel() * t.height() * t.width();
 
+    assert(length == t.data_size());
+
     return {t.mutable_data()->mutable_data(), length, blob::element_number{}};
   }
 }

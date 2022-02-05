@@ -14,12 +14,15 @@ namespace tensor
     decltype(std::declval<body::tensor>().mutable_data()->mutable_data())
     >;
 
+  // send and receive tensor by socket
   void send_tensor(tcp::socket& s, body::tensor& t);
   void get_tensor(tcp::socket& s, body::tensor & t);
 
+  // extract tensor from message
   void
   operator >> (post::message& msg, body::tensor & t);
 
+  // write tensor into message body
   void
   operator << (post::message& msg, body::tensor& t);
 

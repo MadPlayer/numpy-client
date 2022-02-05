@@ -41,10 +41,13 @@ int main(int argc, char *argv[])
           session s(ep);  // create session and connect to endpoint
 
           body::tensor t;
-          t.set_width(1);
-          t.set_height(2);
-          t.set_channel(33);
-          t.mutable_data()->Resize(10, 1);
+          tensor::init_tensor(t, {3, 2, 1});
+          auto blob = tensor::get_blob(t);
+          auto list = blob.data();
+          for (int i = 0; i < blob.size(); i++)
+            {
+              list[i] = i*3;
+            }
 
           s.assign_task([&t](tcp::socket &s){
             tensor::send_tensor(s, t);

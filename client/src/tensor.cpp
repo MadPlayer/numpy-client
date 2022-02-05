@@ -2,6 +2,13 @@
 
 namespace tensor
 {
+  enum   // tensor shape is CHW.
+    {
+      CHANNEL,
+      HEIGHT,
+      WIDTH
+    };
+
   void send_tensor(tcp::socket& s, body::tensor& t)
   {
     // XXX: Hard Coding Server Directory!!!
@@ -35,7 +42,7 @@ namespace tensor
     t.SerializeToOstream(&stream);
   }
 
-  blob::blob<elem_type> get_blob(body::tensor& t)
+  blob::blob<elem_type> get_blob(body::tensor& t) throw()
   {
     std::size_t length = t.channel() * t.height() * t.width();
 
@@ -43,4 +50,16 @@ namespace tensor
 
     return {t.mutable_data()->mutable_data(), length, blob::element_number{}};
   }
+
+  void init_tensor(body::tensor& t, shape tensor_shape)
+  {
+    t.set_channel(std::get<CHANNEL>(tensor_shape));
+    t.set_height(std::get<HEIGHT>(tensor_shape));
+    t.set_width(std::get<WIDTH>(tensor_shape));
+
+    std::size_t length = t.channel() * t.height() * t.width();
+
+    t.mutable_data()->Resize(length, 0); // initialize tensor with zero
+  }
+
 }

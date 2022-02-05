@@ -5,6 +5,7 @@
 #include "message.hpp"
 #include "blob.hpp"
 
+#include <tuple>
 
 namespace tensor
 {
@@ -13,6 +14,9 @@ namespace tensor
   using elem_type = std::remove_pointer_t<
     decltype(std::declval<body::tensor>().mutable_data()->mutable_data())
     >;
+
+  // shape format is CHW.
+  using shape = std::tuple<std::size_t, std::size_t, std::size_t>;
 
   // send and receive tensor by socket
   void send_tensor(tcp::socket& s, body::tensor& t);
@@ -27,5 +31,8 @@ namespace tensor
   operator << (post::message& msg, body::tensor& t);
 
   // get tensor data blob from tensor
-  blob::blob<elem_type> get_blob(body::tensor& t);
+  blob::blob<elem_type> get_blob(body::tensor& t) throw();
+
+  // init tensor to shape. every data tensor contains will be erased.
+  void init_tensor(body::tensor& t, shape tensor_shape);
 }    

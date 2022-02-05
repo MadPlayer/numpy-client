@@ -1,7 +1,7 @@
 * Simple Numpy Array Sending-Receving client over HTTP
 
 ** Requirements
-   - ASIO 1.20.0
+   - ASIO 1.20.0 (asio only)
    - cmake 3.10
    - GNU Make 4.2.1
    - C++ std 17
@@ -11,6 +11,7 @@
     - Python 3
     - Flask
     - Numpy
+    - protobuf
 
 ** Build
    - client
@@ -25,7 +26,9 @@
      #+BEGIN_SRC bash
        # in build folder
        make packet_py
-       cp ./include/packet_pb2.py /path/to/test_numpy_server
+
+       # and then fun python script on project root folder
+       python test_numpy_server.py
      #+END_SRC
 
 ** LICENSE

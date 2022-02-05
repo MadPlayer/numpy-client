@@ -2,7 +2,7 @@ from flask import Flask, request
 import pickle
 import numpy as np
 import json
-from packet_pb2 import tensor
+from build.include.packet_pb2 import tensor
 
 
 app = Flask(__name__)

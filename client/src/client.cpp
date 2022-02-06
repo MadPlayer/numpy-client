@@ -2,8 +2,9 @@
 #include <iostream>
 #include <string>
 #include <system_error>
-#include "message.hpp"
+#include <chrono>
 #include "tensor.hpp"
+#include "session.hpp"
 #include "packet.pb.h"
 
 using namespace asio;
@@ -33,28 +34,36 @@ int main(int argc, char *argv[])
   tcp::endpoint ep(make_address(address), 5000);
 
 
-  try
+  while (true)
     {
-      tcp::socket socket(context, tcp::v4());
+      try
+        {
+          session s(ep);  // create session and connect to endpoint
 
-      socket.connect(ep);
+          body::tensor t;
+          tensor::init_tensor(t, {3, 2, 1});
+          auto blob = tensor::get_blob(t);
+          auto list = blob.data();
+          for (int i = 0; i < blob.size(); i++)
+            {
+              list[i] = i*3;
+            }
 
-      body::tensor t;
-      t.set_width(1);
-      t.set_height(2);
-      t.set_channel(33);
-      t.mutable_data()->Resize(10, 1);
+          s.assign_task([&t](tcp::socket &s){
+            tensor::send_tensor(s, t);
+            tensor::get_tensor(s, t);
+          });
 
-      tensor::send_tensor(socket, t);
-
-      tensor::get_tensor(socket, t);
-
-      std::cout << t;
-    }
-  catch (std::system_error &ec)
-    {
-      std::cerr << "Error(" << ec.code() << "): " << ec.what() << std::endl;
-      return ec.code().value();
+          s.run();
+        
+          std::cout << t;
+          std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+      catch (std::system_error &ec)
+        {
+          std::cerr << "Error(" << ec.code() << "): " << ec.what() << std::endl;
+          return ec.code().value();
+        }
     }
 
   return 0;

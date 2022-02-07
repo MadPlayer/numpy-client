@@ -17,9 +17,10 @@
    - client
      #+BEGIN_SRC bash
        mkdir build && cd build
-       cmake -DASIO_HEADER=$(ASIO/HEADER/LOCATION) ..
+       cmake -DASIO_HEADER=$(ASIO/HEADER/LOCATION) -DONNXRUNTIME_DIR=$(onnx/path/for/include/and/lib) ..
        make
      #+END_SRC
+     or just use gcc standard environment variables (LIBRARY_PATH, CPLUS_INCLUDE_PATH).
 
    - server (server needs protobuf file)
      after building client

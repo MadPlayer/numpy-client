@@ -14,6 +14,7 @@ namespace tensor
   using elem_type = std::remove_pointer_t<
     decltype(std::declval<body::tensor>().mutable_data()->mutable_data())
     >;
+  using blob = blob::blob<elem_type>;
 
   // shape format is CHW.
   using shape = std::tuple<std::size_t, std::size_t, std::size_t>;
@@ -30,9 +31,13 @@ namespace tensor
   void
   operator << (post::message& msg, body::tensor& t);
 
-  // get tensor data blob from tensor
-  blob::blob<elem_type> get_blob(body::tensor& t) throw();
-
   // init tensor to shape. every data tensor contains will be erased.
   void init_tensor(body::tensor& t, shape tensor_shape);
-}    
+}
+
+namespace blob
+{
+  // get tensor data blob from tensor
+  template<>
+  void get_blob(tensor::blob& b, body::tensor& t);
+}

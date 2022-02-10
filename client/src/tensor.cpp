@@ -42,15 +42,6 @@ namespace tensor
     t.SerializeToOstream(&stream);
   }
 
-  blob::blob<elem_type> get_blob(body::tensor& t) throw()
-  {
-    std::size_t length = t.channel() * t.height() * t.width();
-
-    assert(length == t.data_size());
-
-    return {t.mutable_data()->mutable_data(), length, blob::element_number{}};
-  }
-
   void init_tensor(body::tensor& t, shape tensor_shape)
   {
     t.set_channel(std::get<CHANNEL>(tensor_shape));
@@ -62,4 +53,17 @@ namespace tensor
     t.mutable_data()->Resize(length, 0); // initialize tensor with zero
   }
 
+}
+
+namespace blob
+{
+  template<>
+  void get_blob(blob<tensor::elem_type>& b, body::tensor& t)
+  {
+    std::size_t length = t.channel() * t.height() * t.width();
+
+    assert(length == t.data_size());
+
+    b = {t.mutable_data()->mutable_data(), length, element_number{}};
+  }
 }

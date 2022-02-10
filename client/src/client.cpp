@@ -42,7 +42,9 @@ int main(int argc, char *argv[])
 
           body::tensor t;
           tensor::init_tensor(t, {3, 2, 1});
-          auto blob = tensor::get_blob(t);
+          tensor::blob blob;
+          blob::get_blob(blob, t);
+
           auto list = blob.data();
           for (int i = 0; i < blob.size(); i++)
             {

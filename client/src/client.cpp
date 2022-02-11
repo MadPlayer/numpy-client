@@ -1,11 +1,4 @@
-#include "asio.hpp"
-#include <iostream>
-#include <string>
-#include <system_error>
-#include <chrono>
-#include "tensor.hpp"
-#include "session.hpp"
-#include "packet.pb.h"
+#include "client.hpp"
 
 using namespace asio;
 using namespace asio::ip;

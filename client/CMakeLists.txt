@@ -39,6 +39,7 @@ target_link_libraries(client
   PACKET_LIB
   pthread
   opencv_core
+  opencv_videoio
   )
 
 target_include_directories(client PRIVATE

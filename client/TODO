@@ -1,3 +1,5 @@
+# -*- mode:org; -*-
+
 * Inference Procedure for client
   - get image from camera (opencv, gstreamer) [x]
   - preprocess image (for resnet models) (opencv)

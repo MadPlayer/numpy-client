@@ -68,11 +68,11 @@ int main(int argc, char *argv[])
   while(true)
     {
       cam >> img;
-      auto size = img.size();
       try
         {
           session s(ep);  // create session and connect to endpoint
 
+          // XXX: hard coding input image size
           auto preprocessed = preprocess(img, {224, 224});
 
           resnet18.inference(preprocessed, t);

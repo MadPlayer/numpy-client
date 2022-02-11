@@ -1,0 +1,7 @@
+* Inference Procedure for client
+  - get image from camera (opencv, gstreamer)
+  - preprocess image (for resnet models) (opencv)
+  - inference image (only for client side model)
+  - send half-inferenced tensor to server
+  - get outcome tensor from server
+  - repeat

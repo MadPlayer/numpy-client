@@ -56,7 +56,7 @@ namespace blob
 
     std::size_t size()
     {
-      return byte_size_ * sizeof(T);
+      return byte_size_ / sizeof(T);
     }
 
     std::size_t byte_length()

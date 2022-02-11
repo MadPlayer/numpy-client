@@ -14,6 +14,7 @@ set(client_sources
   message.cpp
   tensor.cpp
   session.cpp
+  camera.cpp
   )
 list(TRANSFORM client_sources PREPEND "src/")
 
@@ -39,6 +40,7 @@ target_link_libraries(client
   PACKET_LIB
   pthread
   opencv_core
+  opencv_videoio
   )
 
 target_include_directories(client PRIVATE

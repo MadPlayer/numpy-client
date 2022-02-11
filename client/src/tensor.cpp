@@ -48,7 +48,8 @@ namespace tensor
     t.set_height(std::get<HEIGHT>(tensor_shape));
     t.set_width(std::get<WIDTH>(tensor_shape));
 
-    std::size_t length = t.channel() * t.height() * t.width();
+    std::size_t length = std::get<CHANNEL>(tensor_shape) * std::get<HEIGHT>(tensor_shape)
+      * std::get<WIDTH>(tensor_shape);
 
     t.mutable_data()->Resize(length, 0); // initialize tensor with zero
   }

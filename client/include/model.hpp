@@ -49,23 +49,15 @@ class model
 public:
   model(Ort::Env& env, const char *model_path, Ort::SessionOptions &option);
 
-  // very dangerous (can dereference invalied memory)
-  std::vector<float> & inference(std::vector<float> &input_data);
-
-  // very dangerous (can dereference invalied memory)
-  std::vector<float> & inference(cv::Mat& preprocessed);
-
   void inference(cv::Mat& preprocessed, body::tensor& output);
 
 private:
   Ort::Session session_;
-  Ort::Value input_tensor_{nullptr};
-  Ort::Value output_tensor_{nullptr};
+  Ort::MemoryInfo allocator_info_;
   int64_t input_size_;
+  int64_t output_size_;
   std::vector<int64_t> input_shape_;
   std::vector<int64_t> output_shape_;
   onnx_string input_name_;
   onnx_string output_name_;
-  Ort::MemoryInfo allocator_info_;
-  std::vector<float> result_;
 };

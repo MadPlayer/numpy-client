@@ -25,12 +25,9 @@ void model::inference(cv::Mat& preprocessed, body::tensor& output)
     {
       auto input_tensor = Ort::Value::CreateTensor<float>(allocator_info_, reinterpret_cast<float *>(preprocessed.data),
                                                           input_size_, input_shape_.data(), input_shape_.size());
-      // resize tensor
-      if (output.data_size() != output_size_)
-        output.mutable_data()->Resize(output_size_, 0);
 
       // XXX: fix shape hard coding
-      tensor::init_tensor(output, {input_shape_[1], input_shape_[2], input_shape_[3]});
+      tensor::init_tensor(output, {output_shape_[1], output_shape_[2], output_shape_[3]});
 
       tensor::blob blob;
       blob::get_blob(blob, output);

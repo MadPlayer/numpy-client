@@ -26,23 +26,19 @@ int main(int argc, char *argv[])
   io_context context;
   tcp::endpoint ep(make_address(address), 5000);
 
+  auto cam = camera::create_camera();
+  cv::Mat img;
 
   while (true)
     {
+      cam >> img;
+      auto size = img.size();
       try
         {
           session s(ep);  // create session and connect to endpoint
 
           body::tensor t;
-          tensor::init_tensor(t, {3, 2, 1});
-          tensor::blob blob;
-          blob::get_blob(blob, t);
-
-          auto list = blob.data();
-          for (int i = 0; i < blob.size(); i++)
-            {
-              list[i] = i*3;
-            }
+          tensor::init_tensor(t, {img.channels(), size.height, size.width});
 
           s.assign_task([&t](tcp::socket &s){
             tensor::send_tensor(s, t);

@@ -14,6 +14,7 @@ set(client_sources
   message.cpp
   tensor.cpp
   session.cpp
+  camera.cpp
   )
 list(TRANSFORM client_sources PREPEND "src/")
 

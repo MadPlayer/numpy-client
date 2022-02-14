@@ -15,6 +15,7 @@ set(client_sources
   tensor.cpp
   session.cpp
   camera.cpp
+  model.cpp
   )
 list(TRANSFORM client_sources PREPEND "src/")
 
@@ -41,6 +42,8 @@ target_link_libraries(client
   pthread
   opencv_core
   opencv_videoio
+  opencv_dnn
+  opencv_imgproc
   )
 
 target_include_directories(client PRIVATE

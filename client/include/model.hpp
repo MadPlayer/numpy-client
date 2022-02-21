@@ -50,7 +50,7 @@ public:
   model(Ort::Env& env, const char *model_path, Ort::SessionOptions &option);
 
   // inference only continuous opencv matrix
-  void inference(cv::Mat& preprocessed, body::tensor& output);
+  void inference(cv::Mat preprocessed, body::tensor& output);
 
 private:
   Ort::Session session_;

@@ -16,7 +16,7 @@ model::model(Ort::Env& env, const char *model_path, Ort::SessionOptions &option)
   output_size_ = std::accumulate(output_shape_.begin(), output_shape_.end(), 1, std::multiplies<int64_t>{});
 }
 
-void model::inference(cv::Mat& preprocessed, body::tensor& output)
+void model::inference(cv::Mat preprocessed, body::tensor& output)
 {
   const char *input_names[] = {input_name_.c_str()};
   const char *output_names[] = {output_name_.c_str()};
@@ -27,12 +27,11 @@ void model::inference(cv::Mat& preprocessed, body::tensor& output)
                                                           input_size_, input_shape_.data(), input_shape_.size());
 
       // XXX: fix shape hard coding
-      tensor::init_tensor(output, {output_shape_[1], output_shape_[2], output_shape_[3]});
+      tensor::init_tensor(output, {output_shape_[0], output_shape_[1], 1});
 
-      tensor::blob blob;
-      blob::get_blob(blob, output);
+      tensor::blob blob(output);
 
-      auto output_tensor = Ort::Value::CreateTensor<float>(allocator_info_, blob.data(), output_size_,
+      auto output_tensor = Ort::Value::CreateTensor<float>(allocator_info_, blob.data(), blob.size(),
                                                            output_shape_.data(), output_shape_.size());
 
       session_.Run(Ort::RunOptions{nullptr}, input_names, &input_tensor, 1, output_names, &output_tensor, 1);

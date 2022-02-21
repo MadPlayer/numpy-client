@@ -21,7 +21,7 @@ operator <<(std::ostream& o, const body::tensor &t)
 }
 
 // from https://github.com/leimao/ONNX-Runtime-Inference
-cv::Mat& preprocess(cv::Mat& origin_bgr, std::tuple<int, int> shape)
+cv::Mat preprocess(cv::Mat origin_bgr, std::tuple<int, int> shape)
 {
   cv::Mat resizedImageBGR, resizedImageRGB, resizedImage, preprocessedImage;
   cv::resize(origin_bgr, resizedImageBGR,
@@ -43,7 +43,7 @@ cv::Mat& preprocess(cv::Mat& origin_bgr, std::tuple<int, int> shape)
   // HWC to CHW
   cv::dnn::blobFromImage(resizedImage, preprocessedImage);
 
-  return origin_bgr;
+  return preprocessedImage;
 }
 
 int main(int argc, char *argv[])

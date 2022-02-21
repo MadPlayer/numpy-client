@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <stdexcept>
 
 
 namespace blob
@@ -44,9 +45,12 @@ namespace blob
     }
 
   public:
-    blob():
+
+    template<typename S>
+    explicit blob(S& s):
       data_(nullptr), byte_size_(0)
     {
+      throw std::runtime_error("Specialize blob constructor for your own type.");
     }
 
     T* data()
@@ -63,12 +67,7 @@ namespace blob
     {
       return byte_size_;
     }
-
-    template <typename Type, typename S>
-    friend void get_blob(blob<Type>& b, S& source);
   };
 
-  template <typename T, typename S>
-  void get_blob(blob<T>& b, S& source) {}
 }
 

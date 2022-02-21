@@ -59,12 +59,11 @@ namespace tensor
 namespace blob
 {
   template<>
-  void get_blob(blob<tensor::elem_type>& b, body::tensor& t)
+  template<>
+  blob<tensor::elem_type>::blob(body::tensor& t)
   {
-    std::size_t length = t.channel() * t.height() * t.width();
-
-    assert(length == t.data_size());
-
-    b = {t.mutable_data()->mutable_data(), length, element_number{}};
+    data_ = t.mutable_data()->mutable_data();
+    byte_size_ = t.mutable_data()->size() * sizeof(tensor::elem_type);
   }
+
 }

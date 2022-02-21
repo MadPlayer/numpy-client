@@ -47,10 +47,10 @@ namespace blob
   public:
 
     template<typename S>
-    explicit blob(S& s):
-      data_(nullptr), byte_size_(0)
+    explicit blob(S& s)
     {
-      throw std::runtime_error("Specialize blob constructor for your own type.");
+      // always false
+      static_assert(sizeof(S) != sizeof(S), "Declare specialized constructor for your type.");
     }
 
     T* data()

@@ -37,7 +37,9 @@ namespace tensor
 
 namespace blob
 {
-  // get tensor data blob from tensor
+  // specialized constructor for body::tensor
   template<>
-  void get_blob(tensor::blob& b, body::tensor& t);
+  template<>
+  blob<tensor::elem_type>::blob(body::tensor& t);
+
 }

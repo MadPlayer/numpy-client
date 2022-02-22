@@ -1,5 +1,6 @@
 #pragma once
 #include <cstddef>
+#include <stdexcept>
 
 
 namespace blob
@@ -44,9 +45,12 @@ namespace blob
     }
 
   public:
-    blob():
-      data_(nullptr), byte_size_(0)
+
+    template<typename S>
+    explicit blob(S& s)
     {
+      // always false
+      static_assert(sizeof(S) != sizeof(S), "Declare specialized constructor for your type.");
     }
 
     T* data()
@@ -63,12 +67,7 @@ namespace blob
     {
       return byte_size_;
     }
-
-    template <typename Type, typename S>
-    friend void get_blob(blob<Type>& b, S& source);
   };
 
-  template <typename T, typename S>
-  void get_blob(blob<T>& b, S& source) {}
 }
 

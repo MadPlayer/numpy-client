@@ -8,3 +8,8 @@ message tensor {
   int32 channel = 3;
   repeated float data = 4;
 }
+
+message batched_tensor {
+  int32 batch = 1;
+  repeated tensor tensors  = 2;
+}

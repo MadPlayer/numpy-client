@@ -53,7 +53,7 @@ cv::Mat preprocess(cv::Mat origin_bgr, std::tuple<int, int> shape)
 
 int main(int argc, char *argv[])
 {
-  std::string address = "127.0.0.1";
+  const std::string address = "127.0.0.1";
   io_context context;
   tcp::endpoint ep(make_address(address), 5000);
 
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 
   model resnet18{env, argv[1], session_options};
 
-  body::tensor t;
+  body::batched_tensor ts;
 
   while(true)
     {
@@ -77,19 +77,24 @@ int main(int argc, char *argv[])
         {
           session s(ep);  // create session and connect to endpoint
 
-          // XXX: hard coding input image size
-          auto preprocessed = preprocess(img, {224, 224});
+          auto faces = scrfd::crop_faces(img);
 
-          resnet18.inference(preprocessed, t);
+          for (auto &face : faces)
+            {
+              // XXX: hard coding input image size
+              auto preprocessed = preprocess(face, {224, 224});
+              auto *t = ts.add_tensors(); // allocate new tensor
+              resnet18.inference(preprocessed, *t);
+            }
 
-          s.assign_task([&t](tcp::socket &s){
-            tensor::send_tensor(s, t);
-            tensor::get_tensor(s, t);
+          s.assign_task([&ts](tcp::socket &s){
+            tensor::send_tensors(s, ts);
           });
 
           s.run();
         
-          std::cout << t;
+          ts.clear_tensors();
+
           std::this_thread::sleep_for(std::chrono::seconds(1));
         }
       catch (std::system_error &ec)

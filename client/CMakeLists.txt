@@ -17,6 +17,8 @@ set(client_sources
   camera.cpp
   model.cpp
   scrfd.cpp
+  scrfd_crop.cpp
+  face_align.cpp
   )
 list(TRANSFORM client_sources PREPEND "src/")
 

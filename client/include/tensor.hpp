@@ -25,7 +25,7 @@ namespace tensor
 
   // extract tensor from message
   void
-  operator >> (post::message& msg, body::tensor & t);
+  operator >> (post::message& msg, body::tensor& t);
 
   // write tensor into message body
   void
@@ -33,6 +33,17 @@ namespace tensor
 
   // init tensor to shape. every data tensor contains will be erased.
   void init_tensor(body::tensor& t, shape tensor_shape);
+
+
+  // BATCHED TENSOR ////////////////////////////////////
+  void send_tensors(tcp::socket& s, body::batched_tensor& ts);
+  void get_tensors(tcp::socket& s, body::batched_tensor& ts);
+
+  void
+  operator >> (post::message& msg, body::batched_tensor& ts);
+
+  void
+  operator << (post::message& msg, body::batched_tensor& ts);
 }
 
 namespace blob

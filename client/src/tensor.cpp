@@ -1,4 +1,5 @@
 #include "tensor.hpp"
+#include "message.hpp"
 
 namespace tensor
 {
@@ -52,6 +53,39 @@ namespace tensor
       * std::get<WIDTH>(tensor_shape);
 
     t.mutable_data()->Resize(length, 0); // initialize tensor with zero
+  }
+
+  // BATCHED TENSOR ////////////////////////////////////
+  void send_tensors(tcp::socket& s, body::batched_tensor& ts)
+  {
+    post::message msg("/numpy/inference/batched");
+
+    msg << ts;
+
+    msg.send(s);
+  }
+
+  void get_tensors(tcp::socket& s, body::batched_tensor& ts)
+  {
+    post::message msg("");
+
+    msg.receive(s);
+
+    msg >> ts;
+  }
+
+  void
+  operator >> (post::message& msg, body::batched_tensor& ts)
+  {
+    auto& stream = msg.get_stream();
+    ts.ParseFromIstream(&stream);
+  }
+
+  void
+  operator << (post::message& msg, body::batched_tensor& ts)
+  {
+    auto& stream = msg.get_stream();
+    ts.SerializeToOstream(&stream);
   }
 
 }

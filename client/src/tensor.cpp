@@ -50,6 +50,7 @@ namespace tensor
   // BATCHED TENSOR ////////////////////////////////////
   void send_tensors(tcp::socket& s, body::batched_tensor& ts)
   {
+    // XXX: Hard Coding Server Directory!!!
     post::message msg("/numpy/inference/batched");
 
     msg << ts;

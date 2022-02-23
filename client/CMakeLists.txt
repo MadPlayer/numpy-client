@@ -16,6 +16,7 @@ set(client_sources
   session.cpp
   camera.cpp
   model.cpp
+  scrfd.cpp
   )
 list(TRANSFORM client_sources PREPEND "src/")
 
@@ -44,10 +45,12 @@ target_link_libraries(client
   opencv_videoio
   opencv_dnn
   opencv_imgproc
+  ncnn
   )
 
 target_include_directories(client PRIVATE
   include
+  3rdparty/ncnn/src
   PUBLIC
   ${OpenCV_INCLUDE_DIR}/opencv4 #default header location.
   ${ONNXRUNTIME_DIR}/include

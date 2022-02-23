@@ -11,4 +11,4 @@ include_directories(BEFORE
 
 add_subdirectory(include)
 add_subdirectory(client)
-
+add_subdirectory(3rdparty/ncnn ncnn_build)

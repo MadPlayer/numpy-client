@@ -29,7 +29,7 @@ namespace tensor
   operator << (post::message& msg, body::tensor& t);
 
   // init tensor to shape. every data tensor contains will be erased.
-  void init_tensor(body::tensor& t, const std::vector<int64_t> shape);
+  void init_tensor(body::tensor& t, const std::vector<int64_t>& shape);
 
 
   // BATCHED TENSOR ////////////////////////////////////

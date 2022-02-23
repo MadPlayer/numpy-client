@@ -38,7 +38,7 @@ namespace tensor
     t.SerializeToOstream(&stream);
   }
 
-  void init_tensor(body::tensor& t, std::vector<int64_t> shape)
+  void init_tensor(body::tensor& t, const std::vector<int64_t>& shape)
   {
     *t.mutable_shape() = {shape.begin(), shape.end()};
 

@@ -7,9 +7,14 @@ using namespace asio::ip;
 std::ostream &
 operator <<(std::ostream& o, const body::tensor &t)
 {
-  o << "width: " << t.width() << std::endl
-    << "height: " << t.height() << std::endl
-    << "channel: " << t.channel() << std::endl;
+  
+  o << "shape : \n [";
+  for (auto &i: t.shape())
+    {
+      o << i << ", ";
+    }
+  o<< "]\n";
+
   o << "tensor : \n [";
   for (auto &i: t.data())
     {

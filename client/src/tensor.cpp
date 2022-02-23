@@ -1,15 +1,10 @@
 #include "tensor.hpp"
 #include "message.hpp"
+#include <numeric>
 
+// tensor shape is BCHW
 namespace tensor
 {
-  enum   // tensor shape is CHW.
-    {
-      CHANNEL,
-      HEIGHT,
-      WIDTH
-    };
-
   void send_tensor(tcp::socket& s, body::tensor& t)
   {
     // XXX: Hard Coding Server Directory!!!
@@ -43,14 +38,11 @@ namespace tensor
     t.SerializeToOstream(&stream);
   }
 
-  void init_tensor(body::tensor& t, shape tensor_shape)
+  void init_tensor(body::tensor& t, std::vector<int64_t> shape)
   {
-    t.set_channel(std::get<CHANNEL>(tensor_shape));
-    t.set_height(std::get<HEIGHT>(tensor_shape));
-    t.set_width(std::get<WIDTH>(tensor_shape));
+    *t.mutable_shape() = {shape.begin(), shape.end()};
 
-    std::size_t length = std::get<CHANNEL>(tensor_shape) * std::get<HEIGHT>(tensor_shape)
-      * std::get<WIDTH>(tensor_shape);
+    const std::size_t length = std::accumulate(begin(shape), end(shape), 1, std::multiplies<int64_t>{});
 
     t.mutable_data()->Resize(length, 0); // initialize tensor with zero
   }

@@ -16,9 +16,6 @@ namespace tensor
     >;
   using blob = blob::blob<elem_type>;
 
-  // shape format is CHW.
-  using shape = std::tuple<std::size_t, std::size_t, std::size_t>;
-
   // send and receive tensor by socket
   void send_tensor(tcp::socket& s, body::tensor& t);
   void get_tensor(tcp::socket& s, body::tensor & t);
@@ -32,7 +29,7 @@ namespace tensor
   operator << (post::message& msg, body::tensor& t);
 
   // init tensor to shape. every data tensor contains will be erased.
-  void init_tensor(body::tensor& t, shape tensor_shape);
+  void init_tensor(body::tensor& t, const std::vector<int64_t> shape);
 
 
   // BATCHED TENSOR ////////////////////////////////////

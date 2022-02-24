@@ -12,13 +12,13 @@ def parse_tensor_from_string(data):
     t = tensor()
     t.ParseFromString(data)
     array = np.array(t.data)
-    array.shape = t.shape
+    array.shape = tuple(t.shape)
     return array
 
 
 def serialize_numpy_to_tensor(numpy_array):
     t = tensor()
-    t.shape = list(numpy_array.shape)
+    t.shape[:] = list(numpy_array.shape)
     t.data.extend(numpy_array.flatten("A"))
     return t.SerializeToString()
 
@@ -29,7 +29,7 @@ def parse_tensors_from_string(data):
     batch = []
     for tensor in t.tensors:
         array = np.array(tensor.data)
-        array.shape = tensor.shape
+        array.shape = tuple(tensor.shape)
         batch.append(array)
     return np.array(batch)
 
@@ -61,8 +61,11 @@ def processing_tensor():
 
 @app.route("/numpy/inference/batched", methods=["POST"])
 def processing_tensors():
-    pass
+    arrays = parse_tensor_from_string(request.data)
+    for arr in arrays:
+        print(arr)
 
+    return "done"
 
 if __name__ == '__main__':
     app.run(debug=True)    

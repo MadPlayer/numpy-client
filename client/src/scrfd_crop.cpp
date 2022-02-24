@@ -50,10 +50,10 @@ static int AlignFace(cv::Mat &img_src, const std::vector<FaceObject> &faceobject
 }
 
 
-static SCRFD c_scrfd("scrfd_500m_kps-opt2.bin", "scrfd_500m_kps-opt2.param");
 
 std::vector<cv::Mat> scrfd::crop_faces(cv::Mat frame)
 {
+  static SCRFD c_scrfd{"scrfd_500m_kps-opt2.bin", "scrfd_500m_kps-opt2.param"};
   std::vector<FaceObject> face_objects;
   c_scrfd.detect(frame, face_objects);
 

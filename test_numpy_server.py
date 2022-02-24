@@ -61,8 +61,11 @@ def processing_tensor():
 
 @app.route("/numpy/inference/batched", methods=["POST"])
 def processing_tensors():
-    pass
+    arrays = parse_tensor_from_string(request.data)
+    for arr in arrays:
+        print(arr)
 
+    return "done"
 
 if __name__ == '__main__':
     app.run(debug=True)    

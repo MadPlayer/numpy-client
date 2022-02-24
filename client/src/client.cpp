@@ -1,4 +1,6 @@
 #include "client.hpp"
+#include "message.hpp"
+#include <string>
 
 using namespace asio;
 using namespace asio::ip;
@@ -89,6 +91,13 @@ int main(int argc, char *argv[])
 
           s.assign_task([&ts](tcp::socket &s){
             tensor::send_tensors(s, ts);
+
+            post::message msg("");
+            msg.receive(s);
+
+            std::string content;
+            msg.get_stream() >> content;
+            std::cout << content << std::endl;
           });
 
           s.run();
